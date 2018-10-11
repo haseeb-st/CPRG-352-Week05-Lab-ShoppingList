@@ -37,12 +37,13 @@ public class ShoppingListServlet extends HttpServlet
     {
         HttpSession session = request.getSession();
         String item = request.getParameter("item");
+        String radio = request.getParameter("select");
         String action = request.getParameter("action");
         String hidden = request.getParameter("hidden");
         String username = request.getParameter("username");
         
-        ArrayList<String> itemList = new ArrayList<String>();
-        String[] itemsL = request.getParameterValues("item");
+        ArrayList<String> itemList = null;
+        //String[] itemsL = request.getParameterValues("item");
         boolean login = false;
 
         try
@@ -65,32 +66,25 @@ public class ShoppingListServlet extends HttpServlet
                     //getServletContext().getRequestDispatcher("/WEB-INF/register.jsp").forward(request, response);
                     break;
                 case "add":
-                    //session.setAttribute("item", item);
-                    //item = (String)session.getAttribute("item");
-                    itemList = new ArrayList<String>();
+                    itemList = (ArrayList<String>) session.getAttribute("itemList");
+                    if(itemList==null)
+                    {
+                        itemList = new ArrayList<>();
+                    }
+                    item = request.getParameter("item");
                     itemList.add(item);
                     session.setAttribute("itemList", itemList);
-                    //session.setAttribute("itemsL", itemsL);
-                    //itemList = new ArrayList<String>();
-                    //itemList.add(item);
                     request.setAttribute("addM", "Item has been added");
                     getServletContext().getRequestDispatcher("/WEB-INF/shoppingList.jsp").forward(request, response);
                     break;
                 case "delete":
-                    //session.setAttribute("itemList", itemList);
-                    //itemList.remove("item");
-                    //session.setAttribute("itemList", itemList);
-                    if(request.getParameter("hidden") != null)
-                    {
-                        session.removeAttribute("itemList");
+                    itemList = (ArrayList<String>) session.getAttribute("itemList");
+                        //session.removeAttribute("itemList");
+                        item = request.getParameter("select");
+                        itemList.remove(item);
+                        session.setAttribute("itemList", itemList);
                         request.setAttribute("deleteM", "Item has been deleted.");
                         getServletContext().getRequestDispatcher("/WEB-INF/shoppingList.jsp").forward(request, response);
-                    }
-                    else
-                    {
-                        request.setAttribute("delErrorM", "Nothing to delete,");
-                        getServletContext().getRequestDispatcher("/WEB-INF/shoppingList.jsp").forward(request, response);
-                    }
                     
                     break;
                 case "logout":
