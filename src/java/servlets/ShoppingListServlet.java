@@ -39,11 +39,9 @@ public class ShoppingListServlet extends HttpServlet
         String item = request.getParameter("item");
         String radio = request.getParameter("select");
         String action = request.getParameter("action");
-        String hidden = request.getParameter("hidden");
         String username = request.getParameter("username");
         
         ArrayList<String> itemList = null;
-        //String[] itemsL = request.getParameterValues("item");
         boolean login = false;
 
         try
@@ -53,38 +51,42 @@ public class ShoppingListServlet extends HttpServlet
                 case "register":
                     if(username == null || username.equals(""))
                     {
-                        login = false;
                         request.setAttribute("errorM", "Please enter username.");
                         getServletContext().getRequestDispatcher("/WEB-INF/register.jsp").forward(request, response);
                     }
                     else
-                    {   
-                        login = true;
+                    {
                         session.setAttribute("username", username);
                         getServletContext().getRequestDispatcher("/WEB-INF/shoppingList.jsp").forward(request, response);
                     }
-                    //getServletContext().getRequestDispatcher("/WEB-INF/register.jsp").forward(request, response);
                     break;
                 case "add":
-                    itemList = (ArrayList<String>) session.getAttribute("itemList");
-                    if(itemList==null)
+                    if(item == null || item.equals(""))
                     {
-                        itemList = new ArrayList<>();
+                        request.setAttribute("errorM", "Please enter the name of the item.");
+                        getServletContext().getRequestDispatcher("/WEB-INF/shoppingList.jsp").forward(request, response);
                     }
-                    item = request.getParameter("item");
-                    itemList.add(item);
-                    session.setAttribute("itemList", itemList);
-                    request.setAttribute("addM", "Item has been added");
-                    getServletContext().getRequestDispatcher("/WEB-INF/shoppingList.jsp").forward(request, response);
+                    else
+                    {
+                        itemList = (ArrayList<String>) session.getAttribute("itemList");
+                        if(itemList==null)
+                        {
+                            itemList = new ArrayList<>();
+                        }
+                        item = request.getParameter("item");
+                        itemList.add(item);
+                        session.setAttribute("itemList", itemList);
+                        request.setAttribute("addM", "Item has been added");
+                        getServletContext().getRequestDispatcher("/WEB-INF/shoppingList.jsp").forward(request, response);
+                    }
                     break;
                 case "delete":
                     itemList = (ArrayList<String>) session.getAttribute("itemList");
-                        //session.removeAttribute("itemList");
-                        item = request.getParameter("select");
-                        itemList.remove(item);
-                        session.setAttribute("itemList", itemList);
-                        request.setAttribute("deleteM", "Item has been deleted.");
-                        getServletContext().getRequestDispatcher("/WEB-INF/shoppingList.jsp").forward(request, response);
+                    item = request.getParameter("select");
+                    itemList.remove(item);
+                    session.setAttribute("itemList", itemList);
+                    request.setAttribute("deleteM", "Item has been deleted.");
+                    getServletContext().getRequestDispatcher("/WEB-INF/shoppingList.jsp").forward(request, response);
                     
                     break;
                 case "logout":

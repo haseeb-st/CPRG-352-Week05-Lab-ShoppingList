@@ -17,8 +17,9 @@
         <h1>Shopping List</h1>
         <form method="POST"  action="ShoppingList?action=register">
             Username: <input type="text" name="username"><input type="submit" value="Register Name">
-                      <input type="hidden" name="username">
+                      <input type="hidden" name="hidden" value="username">
         </form>        
         ${errorM}
+        ${logM}
     </body>
 </html>
